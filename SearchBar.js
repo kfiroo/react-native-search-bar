@@ -15,7 +15,6 @@ SearchBar = React.createClass({
     barTintColor: PropTypes.string,
     tintColor: PropTypes.string,
     textFieldBackgroundColor: PropTypes.string,
-    showsCancelButton: PropTypes.bool,
     onChange: PropTypes.func,
     onChangeText: PropTypes.func,
     onFocus: PropTypes.func,
@@ -45,6 +44,9 @@ SearchBar = React.createClass({
   },
   focus: function(){
     NativeModules.RNSearchBarManager.focus(React.findNodeHandle(this));
+  },
+  clear: function(){
+    NativeModules.RNSearchBarManager.clear(React.findNodeHandle(this));
   },
   render: function() {
     return <RNSearchBar
