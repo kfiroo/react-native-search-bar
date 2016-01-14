@@ -19,14 +19,13 @@ RCT_EXPORT_MODULE()
 
 - (UIView *)view
 {
-  RNSearchBar *searchBar = [[RNSearchBar alloc] initWithEventDispatcher:self.bridge.eventDispatcher];
-
-  return searchBar;
+    RNSearchBar *searchBar = [[RNSearchBar alloc] initWithEventDispatcher:self.bridge.eventDispatcher];
+    
+    return searchBar;
 }
 
 RCT_EXPORT_VIEW_PROPERTY(placeholder, NSString)
 RCT_EXPORT_VIEW_PROPERTY(text, NSString)
-RCT_EXPORT_VIEW_PROPERTY(showsCancelButton, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(barTintColor, UIColor)
 RCT_EXPORT_VIEW_PROPERTY(tintColor, UIColor)
 RCT_CUSTOM_VIEW_PROPERTY(hideBackground, BOOL, RNSearchBar)
@@ -39,30 +38,30 @@ RCT_CUSTOM_VIEW_PROPERTY(hideBackground, BOOL, RNSearchBar)
 
 RCT_CUSTOM_VIEW_PROPERTY(textFieldBackgroundColor, UIColor, RNSearchBar)
 {
-  if ([RCTConvert UIColor:json]) {
-    // logic borrowed from http://stackoverflow.com/a/22266150/395989
-    CGSize size = CGSizeMake(34, 34);
-    // create context with transparent background
-    UIGraphicsBeginImageContextWithOptions(size, NO, 1);
-
-    // Add a clip before drawing anything, in the shape of an rounded rect
-    [[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0,0, 34, 34)
-                                cornerRadius:5.0] addClip];
-    [[RCTConvert UIColor:json]  setFill];
-
-    UIRectFill(CGRectMake(0, 0, size.width, size.height));
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-
-    [view setSearchFieldBackgroundImage:image forState:UIControlStateNormal];
-  }
+    if ([RCTConvert UIColor:json]) {
+        // logic borrowed from http://stackoverflow.com/a/22266150/395989
+        CGSize size = CGSizeMake(34, 34);
+        // create context with transparent background
+        UIGraphicsBeginImageContextWithOptions(size, NO, 1);
+        
+        // Add a clip before drawing anything, in the shape of an rounded rect
+        [[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0,0, 34, 34)
+                                    cornerRadius:5.0] addClip];
+        [[RCTConvert UIColor:json]  setFill];
+        
+        UIRectFill(CGRectMake(0, 0, size.width, size.height));
+        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        [view setSearchFieldBackgroundImage:image forState:UIControlStateNormal];
+    }
 }
 
 - (NSDictionary *)constantsToExport
 {
-  return @{
-           @"ComponentHeight": @([self view].intrinsicContentSize.height),
-           };
+    return @{
+             @"ComponentHeight": @([self view].intrinsicContentSize.height),
+             };
 }
 
 RCT_EXPORT_METHOD(blur:(nonnull NSNumber *)reactTag)
@@ -70,7 +69,7 @@ RCT_EXPORT_METHOD(blur:(nonnull NSNumber *)reactTag)
     [self.bridge.uiManager addUIBlock:
      ^(__unused RCTUIManager *uiManager, NSDictionary *viewRegistry){
          RNSearchBar *searchBar = viewRegistry[reactTag];
-
+         
          if ([searchBar isKindOfClass:[RNSearchBar class]]) {
              [searchBar endEditing:true];
          } else {
@@ -84,7 +83,7 @@ RCT_EXPORT_METHOD(focus:(nonnull NSNumber *)reactTag)
     [self.bridge.uiManager addUIBlock:
      ^(__unused RCTUIManager *uiManager, NSDictionary *viewRegistry){
          RNSearchBar *searchBar = viewRegistry[reactTag];
-
+         
          if ([searchBar isKindOfClass:[RNSearchBar class]]) {
              [searchBar becomeFirstResponder];
          } else {
@@ -93,5 +92,18 @@ RCT_EXPORT_METHOD(focus:(nonnull NSNumber *)reactTag)
      }];
 }
 
+RCT_EXPORT_METHOD(clear:(nonnull NSNumber *)reactTag)
+{
+    [self.bridge.uiManager addUIBlock:
+     ^(__unused RCTUIManager *uiManager, NSDictionary *viewRegistry){
+         RNSearchBar *searchBar = viewRegistry[reactTag];
+         
+         if ([searchBar isKindOfClass:[RNSearchBar class]]) {
+             [searchBar searchBarClear];
+         } else {
+             RCTLogError(@"Cannot focus: %@ (tag #%@) is not RNSearchBar", searchBar, reactTag);
+         }
+     }];
+}
 
 @end
