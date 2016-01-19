@@ -37,6 +37,18 @@
 {
     [self setShowsCancelButton:YES animated:YES];
     
+    for (UIView *subView in self.subviews){
+        if([subView isKindOfClass:[UIView class]]){
+            for (UIView *subview in subView.subviews){
+                if([subview isKindOfClass:[UIButton class]]){
+                    [(UIButton*)subview setTitle:@"Done" forState:UIControlStateNormal];
+                }
+            }
+        }
+    }
+    
+    searchBar.keyboardType = UIKeyboardTypeEmailAddress;
+    
     [_eventDispatcher sendTextEventWithType:RCTTextEventTypeFocus
                                    reactTag:self.reactTag
                                        text:searchBar.text
